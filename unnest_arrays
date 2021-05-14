@@ -1,0 +1,37 @@
+#BQ array examples for further use in Looker. 
+
+# https://medium.com/firebase-developers/using-the-unnest-function-in-bigquery-to-analyze-event-parameters-in-analytics-fb828f890b42
+# SELECT [1, 2, 3] as numbers;
+
+# select 'test', [a,b,c] from 
+# (SELECT 5 AS a,
+#           37 AS b,
+#           406 AS c);
+
+# create table  `array_Test` as     
+# select '1' as id ,'bla' as attribute, [a,b,c] as arr from 
+# (SELECT 5 AS a,
+#           37 AS b,
+#           406 AS c);   
+
+# insert into `array_Test`
+# (select '2' as id ,'yada' as attribute, [a,b,c] as arr from 
+# (SELECT   2 AS a,
+#           4 AS b,
+#           16 AS c)
+# )          ;
+
+select t.id,t.attribute, unn_array 
+    from `array_Test` as t
+    cross join unnest (t.arr) as unn_array
+order by 1    ;
+
+
+# WITH sequences AS
+#   (SELECT 1 AS id, [0, 1, 1, 2, 3, 5] AS some_numbers
+#    UNION ALL SELECT 2 AS id, [2, 4, 8, 16, 32] AS some_numbers
+#    UNION ALL SELECT 3 AS id, [5, 10] AS some_numbers)
+# SELECT --*
+#         id, flattened_numbers
+# FROM sequences
+# CROSS JOIN UNNEST(sequences.some_numbers) AS flattened_numbers;
